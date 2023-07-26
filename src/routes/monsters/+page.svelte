@@ -76,7 +76,8 @@
   <form>
     <select bind:value={currentMonster} on:change={()=> {
 		let id = monster_list.filter(x => x["name"] === currentMonster)[0]["numberId"]
-		goto(`/monster/${id}`)
+		// goto(`/monster/${id}`)
+    window.open(`/monster/${id}`, '_blank', "location=yes")
 	}} name="monster">
       {#each monster_list as monster}
         <option>{monster["name"]}</option>
