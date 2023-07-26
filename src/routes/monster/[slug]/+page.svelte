@@ -1,4 +1,5 @@
 <script>
+  import { toast } from "@zerodevx/svelte-toast";
   import {
     generateRollText,
     splitAroundRoll,
@@ -40,8 +41,6 @@
   };
 
   let showDescription = false;
-  let rollData = "";
-//   let currentHp = data.hp.slice(0,data.hp.indexOf("("))
 
 let currentHp = parseInt(data.hp.slice(0,data.hp.indexOf("(")));
 
@@ -62,16 +61,13 @@ let currentHp = parseInt(data.hp.slice(0,data.hp.indexOf("(")));
   }
 </script>
 
-<div style="display: flex; justify-content:center;">
-  <div>{rollData}</div>
-</div>
 <div class="post">
   <div class="stat-block">
     <hr class="orange-border" />
     <div class="section-left">
       <div class="creature-heading">
         <h1>{data.name}</h1>
-        <h2>{data.size}, {data.alignment}</h2>
+        <h2 style="color:black;">{data.size}, {data.alignment}</h2>
       </div>
       <!-- creature heading -->
       <svg height="5" width="100%" class="tapered-rule">
@@ -82,7 +78,7 @@ let currentHp = parseInt(data.hp.slice(0,data.hp.indexOf("(")));
         <div class="property-line">
           <h4>Hit Points</h4>
           <div style="display: flex;justify-content:space-between">
-            <input style="background-color: white;height:50px; width:80px; margin-right:30px;" type="text" value={currentHp} >
+            <input style="background-color: white; color:black;height:20px; width:80px; margin-right:30px;" type="text" bind:value={currentHp} >
           <label style="color:black;flex:1;" for="range">{data.hp}
             <input style="flex:1;" type="range" min="0" max={parseInt(data.hp.slice(0,data.hp.indexOf("(")))} bind:value={currentHp} id="range" name="range">
           </label>
@@ -102,64 +98,76 @@ let currentHp = parseInt(data.hp.slice(0,data.hp.indexOf("(")));
           <polyline points="0,0 400,2.5 0,5" />
         </svg>
         <div class="abilities">
-          <div class="ability-strength">
-            <h4>STR</h4>
+          <div >
+            <div class="stat-header"><b class="stat-value">STR</b></div>
             <a
-              on:click={() =>
-                (rollData = generateRollText(1, 20, modifiers[data.str]))}
+                on:click={()=>{
+                  toast.push(generateRollText(1, 20, modifiers[data.str]),{duration: 10000})
+                }}
             >
               {data.str}
-              <span style="font-size: 11px;">({modifiers[data.str]})</span>
+              <br>
+              ({modifiers[data.str]})
             </a>
           </div>
-          <div class="ability-dexterity">
-            <h4>DEX</h4>
+          <div >
+            <div class="stat-header"><b class="stat-value">DEX</b></div>
             <a
-              on:click={() =>
-                (rollData = generateRollText(1, 20, modifiers[data.dex]))}
+                on:click={()=>{
+                  toast.push(generateRollText(1, 20, modifiers[data.dex]),{duration:10000})
+                }}
             >
               {data.dex}
-              <span style="font-size: 11px;">({modifiers[data.dex]})</span>
+              <br>
+              ({modifiers[data.dex]})
             </a>
           </div>
-          <div class="ability-constitution">
-            <h4>CON</h4>
+          <div>
+            <div class="stat-header"><b class="stat-value">CON</b></div>
             <a
-              on:click={() =>
-                (rollData = generateRollText(1, 20, modifiers[data.con]))}
+                on:click={()=>{
+                  toast.push(generateRollText(1, 20, modifiers[data.con]),{duration:10000})
+                }}
             >
               {data.con}
-              <span style="font-size: 11px;">({modifiers[data.con]})</span>
+              <br>
+              ({modifiers[data.con]})
             </a>
           </div>
-          <div class="ability-intelligence">
-            <h4>INT</h4>
+          <div>
+            <div class="stat-header"><b class="stat-value">INT</b></div>
             <a
-              on:click={() =>
-                (rollData = generateRollText(1, 20, modifiers[data.int]))}
+                on:click={()=>{
+                  toast.push(generateRollText(1, 20, modifiers[data.int]),{duration:10000})
+                }}
             >
               {data.int}
-              <span style="font-size: 11px;">({modifiers[data.int]})</span>
+              <br>
+              ({modifiers[data.int]})
             </a>
           </div>
-          <div class="ability-wisdom">
-            <h4>WIS</h4>
+          <div>
+            <div class="stat-header"><b class="stat-value">WIS</b></div>
             <a
-              on:click={() =>
-                (rollData = generateRollText(1, 20, modifiers[data.wis]))}
+                on:click={()=>{
+                  toast.push(generateRollText(1, 20, modifiers[data.wis]),{duration:10000})
+                }}
             >
               {data.wis}
-              <span style="font-size: 11px;">({modifiers[data.wis]})</span>
+              <br>
+              ({modifiers[data.wis]})
             </a>
           </div>
-          <div class="ability-charisma">
-            <h4>CHA</h4>
+          <div>
+            <div class="stat-header"><b class="stat-value">CHA</b></div>
             <a
-              on:click={() =>
-                (rollData = generateRollText(1, 20, modifiers[data.cha]))}
+                on:click={()=>{
+                  toast.push(generateRollText(1, 20, modifiers[data.cha]),{duration:10000})
+                }}
             >
               {data.cha}
-              <span style="font-size: 11px;">({modifiers[data.cha]})</span>
+              <br>
+              ({modifiers[data.cha]})
             </a>
           </div>
         </div>
@@ -265,11 +273,11 @@ let currentHp = parseInt(data.hp.slice(0,data.hp.indexOf("(")));
               {#if chunk.replace}
                 <a
                   on:click={() => {
-                    rollData = generateRollText(
+                    toast.push(generateRollText(
                       extractRoll(chunk.value).num,
                       extractRoll(chunk.value).sides,
                       extractRoll(chunk.value).mod
-                    );
+                    ),{duration: 10000})
                   }}>{chunk.value}</a
                 >
               {:else}
@@ -291,15 +299,15 @@ let currentHp = parseInt(data.hp.slice(0,data.hp.indexOf("(")));
               <b>{reaction.name}: </b>
               {#each splitAroundRoll(reaction.text, findDamageStrings(reaction.text)) as chunk}
                 {#if chunk.replace}
-                  <a
-                    on:click={() => {
-                      rollData = generateRollText(
-                        extractRoll(chunk.value).num,
-                        extractRoll(chunk.value).sides,
-                        extractRoll(chunk.value).mod
-                      );
-                    }}>{chunk.value}</a
-                  >
+                <a
+                  on:click={() => {
+                    toast.push(generateRollText(
+                      extractRoll(chunk.value).num,
+                      extractRoll(chunk.value).sides,
+                      extractRoll(chunk.value).mod
+                    ),{duration:10000})
+                  }}>{chunk.value}</a
+                >
                 {:else}
                   {chunk.value}
                 {/if}
@@ -376,15 +384,26 @@ let currentHp = parseInt(data.hp.slice(0,data.hp.indexOf("(")));
     --statblock-main-color: #7a200d;
     --statblock-secondary-color: #922610;
     --statblock-background-color: #fdf1dc;
+    --toastContainerTop: auto;
+    --toastContainerRight: auto;
+    --toastContainerBottom: 8rem;
+    --toastContainerLeft: calc(50vw - 8rem);
   }
 
-  .abilities > div > p,
-  h2 {
-    color: black;
+  a{
+   color:blue;
+   cursor: pointer;
   }
-  .abilities * > a {
-    font-size: 20px;
+
+  .stat-header{
+   margin-bottom:1em;
+   margin-top:1em;
+   
   }
+  .stat-value{
+   font-size: 20px;
+  }
+
   .stat-block {
     font-size: 13.5px;
     line-height: 1.2em;
@@ -515,22 +534,20 @@ let currentHp = parseInt(data.hp.slice(0,data.hp.indexOf("(")));
   .abilities > div {
     display: inline-block;
     vertical-align: middle;
-    width: 15.5%;
+    width: 12.5%;
     min-width: 40px;
     font-size: 12px;
     line-height: 1em;
   }
   .abilities h4 {
-    margin: 10px 0 2px;
     font-size: 14px;
     line-height: 1.2em;
     text-transform: uppercase;
     color: var(--statblock-main-color);
   }
-  .abilities p {
-    margin: 0 0 10px;
+  /* .abilities p {
     line-height: 1.2em;
-  }
+  } */
   /* .property-block h4,
   .property-block p {
     font-size: 13.5px;

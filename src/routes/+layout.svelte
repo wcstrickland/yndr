@@ -1,13 +1,13 @@
 <script>
+  import {SvelteToast} from '@zerodevx/svelte-toast'
   import Header from "../lib/components/Header.svelte";
-  import "./pico.css";
   import "../styles.css";
 </script>
 
 <div class="app">
+  <SvelteToast options={{ reversed: true, intro: { y: 192 } }} />
   <div>
-    <Header />
-    <main class="container">
+    <main class="container" style="display:flex;justify-content:center;">
       <slot />
     </main>
   </div>
