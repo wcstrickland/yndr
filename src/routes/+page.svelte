@@ -1,4 +1,5 @@
 <script>
+	import { base } from '$app/paths'
   import all_monsters from "../lib/json/monsters.json";
   import { goto } from '$app/navigation';
   const types = [
@@ -77,7 +78,7 @@
     <select bind:value={currentMonster} on:change={()=> {
 		let id = monster_list.filter(x => x["name"] === currentMonster)[0]["numberId"]
 		// goto(`/monster/${id}`)
-    window.open(`/monster/${id}`, '_blank')
+    window.open(`${base}/monster/${id}`, '_blank')
 	}} name="monster">
       {#each monster_list as monster}
         <option>{monster["name"]}</option>
