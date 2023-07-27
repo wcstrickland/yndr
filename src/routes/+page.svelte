@@ -70,7 +70,7 @@
   <meta name="description" content="Yndr" />
 </svelte:head>
 
-<article>
+<article style="width:50%;">
   <header>Monsters</header>
 
   <form>
@@ -84,13 +84,15 @@
       {/each}
     </select>
 
-    <select bind:value={challenge} name="cr">
+	<label for="cr">Challenge</label>
+    <select bind:value={challenge} name="cr" id="cr">
       {#each crs as cr}
         <option>{cr}</option>
       {/each}
     </select>
 
-    <select bind:value={type} name="type">
+	<label for="type">Type</label>
+    <select bind:value={type} name="type" id="type">
       {#each types as type}
         <option>{type}</option>
       {/each}

@@ -42,7 +42,7 @@
 
   let showDescription = false;
 
-let currentHp = parseInt(data.hp.slice(0,data.hp.indexOf("(")));
+  let currentHp = parseInt(data.hp.slice(0, data.hp.indexOf("(")));
 
   let traits = Array.isArray(data.trait) ? data.trait : [data.trait];
 
@@ -77,11 +77,24 @@ let currentHp = parseInt(data.hp.slice(0,data.hp.indexOf("(")));
         <!-- property line -->
         <div class="property-line">
           <h4>Hit Points</h4>
-          <div style="display: flex;justify-content:space-between">
-            <input style="background-color: white; color:black;height:20px; width:80px; margin-right:30px;" type="text" bind:value={currentHp} >
-          <label style="color:black;flex:1;" for="range">{data.hp}
-            <input style="flex:1;" type="range" min="0" max={parseInt(data.hp.slice(0,data.hp.indexOf("(")))} bind:value={currentHp} id="range" name="range">
-          </label>
+          <div style="display: flex;justify-content:start">
+            <input
+              style="background-color: white; color:black;height:20px; width:80px; margin-right:30px;"
+              type="text"
+              bind:value={currentHp}
+            />
+            <label style="display:flex;color:black;flex-direction:column;flex:1;" for="range"
+              >{data.hp}
+              <input
+                style="flex:1;display:flex;flex-direction:column;"
+                type="range"
+                min="0"
+                max={parseInt(data.hp.slice(0, data.hp.indexOf("(")))}
+                bind:value={currentHp}
+                id="range"
+                name="range"
+              />
+            </label>
           </div>
         </div>
         <!-- property line -->
@@ -98,75 +111,87 @@ let currentHp = parseInt(data.hp.slice(0,data.hp.indexOf("(")));
           <polyline points="0,0 400,2.5 0,5" />
         </svg>
         <div class="abilities">
-          <div >
+          <div>
             <div class="stat-header"><b class="stat-value">STR</b></div>
             <a
-                on:click={()=>{
-                  toast.push(generateRollText(1, 20, modifiers[data.str]),{duration: 10000})
-                }}
+              on:click={() => {
+                toast.push(generateRollText(1, 20, modifiers[data.str]), {
+                  duration: 10000,
+                });
+              }}
             >
               {data.str}
-              <br>
+              <br />
               ({modifiers[data.str]})
             </a>
           </div>
-          <div >
+          <div>
             <div class="stat-header"><b class="stat-value">DEX</b></div>
             <a
-                on:click={()=>{
-                  toast.push(generateRollText(1, 20, modifiers[data.dex]),{duration:10000})
-                }}
+              on:click={() => {
+                toast.push(generateRollText(1, 20, modifiers[data.dex]), {
+                  duration: 10000,
+                });
+              }}
             >
               {data.dex}
-              <br>
+              <br />
               ({modifiers[data.dex]})
             </a>
           </div>
           <div>
             <div class="stat-header"><b class="stat-value">CON</b></div>
             <a
-                on:click={()=>{
-                  toast.push(generateRollText(1, 20, modifiers[data.con]),{duration:10000})
-                }}
+              on:click={() => {
+                toast.push(generateRollText(1, 20, modifiers[data.con]), {
+                  duration: 10000,
+                });
+              }}
             >
               {data.con}
-              <br>
+              <br />
               ({modifiers[data.con]})
             </a>
           </div>
           <div>
             <div class="stat-header"><b class="stat-value">INT</b></div>
             <a
-                on:click={()=>{
-                  toast.push(generateRollText(1, 20, modifiers[data.int]),{duration:10000})
-                }}
+              on:click={() => {
+                toast.push(generateRollText(1, 20, modifiers[data.int]), {
+                  duration: 10000,
+                });
+              }}
             >
               {data.int}
-              <br>
+              <br />
               ({modifiers[data.int]})
             </a>
           </div>
           <div>
             <div class="stat-header"><b class="stat-value">WIS</b></div>
             <a
-                on:click={()=>{
-                  toast.push(generateRollText(1, 20, modifiers[data.wis]),{duration:10000})
-                }}
+              on:click={() => {
+                toast.push(generateRollText(1, 20, modifiers[data.wis]), {
+                  duration: 10000,
+                });
+              }}
             >
               {data.wis}
-              <br>
+              <br />
               ({modifiers[data.wis]})
             </a>
           </div>
           <div>
             <div class="stat-header"><b class="stat-value">CHA</b></div>
             <a
-                on:click={()=>{
-                  toast.push(generateRollText(1, 20, modifiers[data.cha]),{duration:10000})
-                }}
+              on:click={() => {
+                toast.push(generateRollText(1, 20, modifiers[data.cha]), {
+                  duration: 10000,
+                });
+              }}
             >
               {data.cha}
-              <br>
+              <br />
               ({modifiers[data.cha]})
             </a>
           </div>
@@ -205,13 +230,43 @@ let currentHp = parseInt(data.hp.slice(0,data.hp.indexOf("(")));
           </div>
         {/if}
         <div class="property-line">
-          <h4>Saving Throws</h4>
-          <p>{data.save}</p>
+          <h4>Saving Throws:</h4>
+          <p>
+            {#each splitAroundRoll(data.save, findDamageStrings(data.save)) as chunk}
+              {#if chunk.replace}
+                <a
+                  on:click={() => {
+                    toast.push(
+                      generateRollText(1, 20, extractRoll(chunk.value).mod),
+                      { duration: 10000 }
+                    );
+                  }}>{chunk.value}</a
+                >
+              {:else}
+                {chunk.value}
+              {/if}
+            {/each}
+          </p>
         </div>
         {#if isPresent("skill")}
           <div class="property-line">
             <h4>Skills</h4>
-            <p>{data.skill}</p>
+            <p>
+              {#each splitAroundRoll(data.skill, findDamageStrings(data.skill)) as chunk}
+                {#if chunk.replace}
+                  <a
+                    on:click={() => {
+                      toast.push(
+                        generateRollText(1, 20, extractRoll(chunk.value).mod),
+                        { duration: 10000 }
+                      );
+                    }}>{chunk.value}</a
+                  >
+                {:else}
+                  {chunk.value}
+                {/if}
+              {/each}
+            </p>
           </div>
         {/if}
         {#if isPresent("languages")}
@@ -273,11 +328,14 @@ let currentHp = parseInt(data.hp.slice(0,data.hp.indexOf("(")));
               {#if chunk.replace}
                 <a
                   on:click={() => {
-                    toast.push(generateRollText(
-                      extractRoll(chunk.value).num,
-                      extractRoll(chunk.value).sides,
-                      extractRoll(chunk.value).mod
-                    ),{duration: 10000})
+                    toast.push(
+                      generateRollText(
+                        extractRoll(chunk.value).num,
+                        extractRoll(chunk.value).sides,
+                        extractRoll(chunk.value).mod
+                      ),
+                      { duration: 10000 }
+                    );
                   }}>{chunk.value}</a
                 >
               {:else}
@@ -299,15 +357,18 @@ let currentHp = parseInt(data.hp.slice(0,data.hp.indexOf("(")));
               <b>{reaction.name}: </b>
               {#each splitAroundRoll(reaction.text, findDamageStrings(reaction.text)) as chunk}
                 {#if chunk.replace}
-                <a
-                  on:click={() => {
-                    toast.push(generateRollText(
-                      extractRoll(chunk.value).num,
-                      extractRoll(chunk.value).sides,
-                      extractRoll(chunk.value).mod
-                    ),{duration:10000})
-                  }}>{chunk.value}</a
-                >
+                  <a
+                    on:click={() => {
+                      toast.push(
+                        generateRollText(
+                          extractRoll(chunk.value).num,
+                          extractRoll(chunk.value).sides,
+                          extractRoll(chunk.value).mod
+                        ),
+                        { duration: 10000 }
+                      );
+                    }}>{chunk.value}</a
+                  >
                 {:else}
                   {chunk.value}
                 {/if}
@@ -390,18 +451,17 @@ let currentHp = parseInt(data.hp.slice(0,data.hp.indexOf("(")));
     --toastContainerLeft: calc(50vw - 8rem);
   }
 
-  a{
-   color:blue;
-   cursor: pointer;
+  a {
+    color: blue;
+    cursor: pointer;
   }
 
-  .stat-header{
-   margin-bottom:1em;
-   margin-top:1em;
-   
+  .stat-header {
+    margin-bottom: 1em;
+    margin-top: 1em;
   }
-  .stat-value{
-   font-size: 20px;
+  .stat-value {
+    font-size: 20px;
   }
 
   .stat-block {

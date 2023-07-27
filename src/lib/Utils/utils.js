@@ -11,12 +11,15 @@ export function findToHit(dataString) {
 export function findDamageStrings(dataString) {
     if (typeof dataString === "string") {
         let damageStrings = []
-        const toHitPattern = /\+(\d{1,2}) to hit/
+        // const toHitPattern = /\+(\d{1,2}) to hit/
+        const toHitPattern = /\+(\d{1,2})/g
         const damagePattern = /\(*(\d{1,2})d(\d{1,2})\s?\+?\s?(\d{0,2})\)*/g
         let damageMatches = dataString.matchAll(damagePattern)
-        let toHitMatches = dataString.match(toHitPattern)
-        if (toHitMatches !== null) {
-            damageStrings.push(toHitMatches[0])
+        let toHitMatches = dataString.matchAll(toHitPattern)
+        for (let match of toHitMatches) {
+            if (toHitMatches !== null) {
+                damageStrings.push(match[0])
+            }
         }
         for (let match of damageMatches) {
             if (match !== null) {
@@ -30,7 +33,7 @@ export function findDamageStrings(dataString) {
 
 export function extractRoll(dataString) {
     const damagePattern = /\(*(\d{1,2})d(\d{1,2})\s?\+?\s?(\d{0,2})\)*/
-    const toHitPattern = /\+(\d{1,2}) to hit/
+    const toHitPattern = /\+(\d{1,2})/
     let damageMatch = dataString.match(damagePattern)
     let toHitMatch = dataString.match(toHitPattern)
     if (toHitMatch !== null) {
@@ -61,10 +64,10 @@ export function generateRollText(num, sides, mod) {
         output.push(`(${mod})`)
         total += parseInt(mod) || 0
     } else {
-        if(mod !== ""){
-        output.push("+")
-        output.push(`(${mod})`)
-        total += parseInt(mod) || 0
+        if (mod !== "") {
+            output.push("+")
+            output.push(`(${mod})`)
+            total += parseInt(mod) || 0
         }
     }
     output.push(` = ${total}`)
@@ -76,7 +79,7 @@ export function splitAroundRoll(dataString, patternMatches) {
     let currentPosition = 0
     for (let match of patternMatches) {
         let matchLength = match.length
-        let matchStartingPosition = dataString.indexOf(match)
+        let matchStartingPosition = dataString.indexOf(match, currentPosition)
         let matchEndingPosition = matchStartingPosition + matchLength
         outPut.push({ "value": dataString.slice(currentPosition, matchStartingPosition), "replace": false })
         currentPosition = matchEndingPosition
